@@ -1,44 +1,149 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			urlBase: "https://www.swapi.tech/api",
+			characters: [],
+			planets: [],
+			vehicles: [],
+			infoCharacters: [],
+			infoPlanet: [],
+			infoVehicle: [],
+			favoritos: [],
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			getCharacters: async () => {
+				fetch(`${getStore().urlBase}/people`)
+					.then((resp) => resp.json())
+					.then((data) => {
+						for (let item of data.results) {
+							fetch(item.url)
+								.then((resp) => resp.json())
+								.then((data) => {
+									setStore({
+										characters: [...getStore().characters, data.result]
+									})
+								}).catch((err) => {
+									console.log(err)
+								})
+						}
+					}).catch((err) => {
+						console.log(err)
+					})
+				
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+			},
+			getPlanets: async () => {
+				fetch(`${getStore().urlBase}/planets`)
+					.then((resp) => resp.json())
+					.then((data) => {
+						for (let item of data.results) {
+							fetch(item.url)
+								.then((resp) => resp.json())
+								.then((data) => {
+									setStore({
+										planets: [...getStore().planets, data.result]
+									})
+								}).catch((err) => {
+									console.log(err)
+								})
+						}
+					}).catch((err) => {
+						console.log(err)
+					})
 
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
+			},
+			getVehicles: async () => {
+				fetch(`${getStore().urlBase}/vehicles`)
+					.then((resp) => resp.json())
+					.then((data) => {
+						for (let item of data.results) {
+							fetch(item.url)
+								.then((resp) => resp.json())
+								.then((data) => {
+									setStore({
+										vehicles: [...getStore().vehicles, data.result]
+									})
+								}).catch((err) => {
+									console.log(err)
+								})
+						}
+					}).catch((err) => {
+						console.log(err)
+					})
+
+			},
+			getInfoCharacters: async (id) => {
+				
+				try {
+					const resp = await fetch(`${getStore().urlBase}/people/${id}`, {
+						method: "GET",
+						headers: { "Content-Type": "application/json" }
+					})
+
+					if (resp.status == 200) {
+						const data = await resp.json()
+						console.log(data.result)
+						setStore({ infoCharacters: data.result })
+						return true
+					}
+				} catch (error) {
+					console.log(error)
+					return false
+				}
+
+			},
+			getInfoPlanets: async (id) => {
+				
+				try {
+					const resp = await fetch(`${getStore().urlBase}/planets/${id}`, {
+						method: "GET",
+						headers: { "Content-Type": "application/json" }
+					})
+
+					if (resp.status == 200) {
+						const data = await resp.json()
+						console.log(data.result)
+						setStore({ infoPlanet: data.result })
+						return true
+					}
+				} catch (error) {
+					console.log(error)
+					return false
+				}
+
+			},
+			getInfoVehicle: async (id) => {
+				// console.log(id)
+				try {
+					const resp = await fetch(`${getStore().urlBase}/vehicles/${id}`, {
+						method: "GET",
+						headers: { "Content-Type": "application/json" }
+					})
+
+					if (resp.status == 200) {
+						const data = await resp.json()
+						console.log(data.result)
+						setStore({ infoVehicle: data.result })
+						return true
+					}
+				} catch (error) {
+					console.log(error)
+					return false
+				}
+
+			},
+			addfavoritos: (item) => {
+				if (getStore().favoritos.includes(item)) {
+					let aux = []
+					aux = getStore().favoritos.filter((elem) => elem != item)
+					setStore({ favoritos: aux })
+				} else {
+					setStore({ favoritos: [...getStore().favoritos, item] })
+				}
+
+			},
+
+		},
 	};
 };
 

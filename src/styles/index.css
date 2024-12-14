@@ -1,3 +1,42 @@
-/* 
-    General Styles
-*/
+body {
+    background-color: black;
+    background-image: url("https://lumiere-a.akamaihd.net/v1/images/star-wars-backgrounds-14_856985d9.jpeg?download=true");
+  }
+  
+  .card {
+    min-width: 300px;
+    max-width: 700px;
+  }
+  
+  .my-carrusel {
+    display: flex;
+    overflow: scroll;
+    overflow-x: auto; 
+    overflow-y: hidden; 
+  }
+  
+  
+  .my-carrusel::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      90deg,
+      #ffd700,
+      #ff6600
+    ); 
+    border-radius: 10px; 
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.75); 
+  }
+  
+  .my-carrusel::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      90deg,
+      #ffcc00,
+      #ff3300
+    ); 
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.9);
+  }
+  
+  .my-carrusel::-webkit-scrollbar-track {
+    background: #0f0f0f; 
+    border-radius: 10px; 
+  }
+  
